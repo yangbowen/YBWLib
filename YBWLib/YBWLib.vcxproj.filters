@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\misc">
+      <UniqueIdentifier>{4fe217a6-e092-4287-808d-dd43fbfe9169}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Exception">
+      <UniqueIdentifier>{40ae3d51-5dd3-42cb-854e-93cdd4f9f7cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Resource">
+      <UniqueIdentifier>{b3984175-f512-4e47-bf69-24417f80ef53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Exception">
+      <UniqueIdentifier>{0cb62c8c-e557-4d0c-8b7a-6820401e587f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\misc">
+      <UniqueIdentifier>{3e818f52-bf3c-49b0-9b4c-30d06fe5ccc8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Resource">
+      <UniqueIdentifier>{233128c4-b30c-459b-acb5-05e13b873433}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\HookableProc">
+      <UniqueIdentifier>{c2166dc7-5823-4028-b2c7-5116f60d396a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\HookableProc">
+      <UniqueIdentifier>{c526373b-2c60-463b-bf31-a793866cc946}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\BinHook">
+      <UniqueIdentifier>{2c202568-9e56-4056-9eef-b05a32cb4e22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\BinHook">
+      <UniqueIdentifier>{57e7c5da-9d12-44bf-93d4-55177f8a6645}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Exception\Exception.h">
+      <Filter>Header Files\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="Exception\Exception_res.h">
+      <Filter>Header Files\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\window_helper.h">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\guid_helper.h">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\pimpl_helper.h">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\ptr_helper.h">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="misc\sync_helper.h">
+      <Filter>Header Files\misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\global_res.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\resource.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="Exception\Exception_helper.h">
+      <Filter>Header Files\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Resource_helper.h">
+      <Filter>Header Files\Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="HookableProc\HookableProcRaw.h">
+      <Filter>Header Files\HookableProc</Filter>
+    </ClInclude>
+    <ClInclude Include="HookableProc\HookableProc.h">
+      <Filter>Header Files\HookableProc</Filter>
+    </ClInclude>
+    <ClInclude Include="HookableProc\HookableProc_exception.h">
+      <Filter>Header Files\HookableProc</Filter>
+    </ClInclude>
+    <ClInclude Include="HookableProc\HookableProc_res.h">
+      <Filter>Header Files\HookableProc</Filter>
+    </ClInclude>
+    <ClInclude Include="HookableProc\HookableProcCommon.h">
+      <Filter>Header Files\HookableProc</Filter>
+    </ClInclude>
+    <ClInclude Include="HookableProc\HookableProcCommon_internal.h">
+      <Filter>Header Files\HookableProc</Filter>
+    </ClInclude>
+    <ClInclude Include="BinHook\BinHook.h">
+      <Filter>Header Files\BinHook</Filter>
+    </ClInclude>
+    <ClInclude Include="BinHook\BinHookCdecl.h">
+      <Filter>Header Files\BinHook</Filter>
+    </ClInclude>
+    <ClInclude Include="BinHook\BinHookCommon.h">
+      <Filter>Header Files\BinHook</Filter>
+    </ClInclude>
+    <ClInclude Include="BinHook\BinHookMsThiscall.h">
+      <Filter>Header Files\BinHook</Filter>
+    </ClInclude>
+    <ClInclude Include="BinHook\BinHookRaw.h">
+      <Filter>Header Files\BinHook</Filter>
+    </ClInclude>
+    <ClInclude Include="BinHook\BinHookStdcall.h">
+      <Filter>Header Files\BinHook</Filter>
+    </ClInclude>
+    <ClInclude Include="BinHook\LDasm.h">
+      <Filter>Header Files\BinHook</Filter>
+    </ClInclude>
+    <ClInclude Include="YBWLib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BinHook\BinHookMsFastcall.h">
+      <Filter>Header Files\BinHook</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Exception\Exception.cpp">
+      <Filter>Source Files\Exception</Filter>
+    </ClCompile>
+    <ClCompile Include="Exception\Exception_res.cpp">
+      <Filter>Source Files\Exception</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\guid_helper.cpp">
+      <Filter>Source Files\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\ptr_helper.cpp">
+      <Filter>Source Files\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\sync_helper.cpp">
+      <Filter>Source Files\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="misc\window_helper.cpp">
+      <Filter>Source Files\misc</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\global_res.cpp">
+      <Filter>Source Files\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="Exception\Exception_helper.cpp">
+      <Filter>Source Files\Exception</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\Resource_helper.cpp">
+      <Filter>Source Files\Resource</Filter>
+    </ClCompile>
+    <ClCompile Include="HookableProc\HookableProcRaw.cpp">
+      <Filter>Source Files\HookableProc</Filter>
+    </ClCompile>
+    <ClCompile Include="HookableProc\HookableProc.cpp">
+      <Filter>Source Files\HookableProc</Filter>
+    </ClCompile>
+    <ClCompile Include="HookableProc\HookableProc_exception.cpp">
+      <Filter>Source Files\HookableProc</Filter>
+    </ClCompile>
+    <ClCompile Include="HookableProc\HookableProc_res.cpp">
+      <Filter>Source Files\HookableProc</Filter>
+    </ClCompile>
+    <ClCompile Include="HookableProc\HookableProcCommon.cpp">
+      <Filter>Source Files\HookableProc</Filter>
+    </ClCompile>
+    <ClCompile Include="BinHook\LDasm.c">
+      <Filter>Source Files\BinHook</Filter>
+    </ClCompile>
+    <ClCompile Include="BinHook\BinHookCdecl.cpp">
+      <Filter>Source Files\BinHook</Filter>
+    </ClCompile>
+    <ClCompile Include="BinHook\BinHookCommon.cpp">
+      <Filter>Source Files\BinHook</Filter>
+    </ClCompile>
+    <ClCompile Include="BinHook\BinHookMsThiscall.cpp">
+      <Filter>Source Files\BinHook</Filter>
+    </ClCompile>
+    <ClCompile Include="BinHook\BinHookRaw.cpp">
+      <Filter>Source Files\BinHook</Filter>
+    </ClCompile>
+    <ClCompile Include="BinHook\BinHookStdcall.cpp">
+      <Filter>Source Files\BinHook</Filter>
+    </ClCompile>
+    <ClCompile Include="BinHook\BinHookMsFastcall.cpp">
+      <Filter>Source Files\BinHook</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource\resource.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="header_order.txt" />
+  </ItemGroup>
+</Project>
