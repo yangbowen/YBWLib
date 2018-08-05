@@ -28,7 +28,7 @@ namespace Exception {
 
 	SourceCodePosition_t::~SourceCodePosition_t() {
 		if (this->FileName) {
-			delete[] this->FileName;
+			free(this->FileName);
 			this->FileName = nullptr;
 		}
 		this->LineNumber = -1;
@@ -47,7 +47,7 @@ namespace Exception {
 	BaseException::~BaseException() {}
 
 	wchar_t* BaseException::GetDescriptionPostfix() const {
-		return _wcsdup(L"\n");
+		return format_string(L"\n");
 	}
 
 	ExceptionWithSourceCodePosition::ExceptionWithSourceCodePosition(const SourceCodePosition_t& source_code_position)
@@ -112,11 +112,11 @@ namespace Exception {
 
 	ExternalAPIErrorException::~ExternalAPIErrorException() {
 		if (this->LibraryName) {
-			delete[] this->LibraryName;
+			free(this->LibraryName);
 			this->LibraryName = nullptr;
 		}
 		if (this->FunctionName) {
-			delete[] this->FunctionName;
+			free(this->FunctionName);
 			this->FunctionName = nullptr;
 		}
 	}
@@ -154,13 +154,13 @@ namespace Exception {
 	InvalidParameterException::~InvalidParameterException() {
 		this->HasClass = false;
 		if (this->ClassName) {
-			delete[] this->ClassName;
+			free(this->ClassName);
 			this->ClassName = nullptr;
 		}
 		this->HasThisPtr = false;
 		this->ThisPtr = nullptr;
 		if (this->FunctionName) {
-			delete[] this->FunctionName;
+			free(this->FunctionName);
 			this->FunctionName = nullptr;
 		}
 		this->ParameterIndex = -1;
@@ -241,7 +241,7 @@ namespace Exception {
 
 	WindowInitializationFailureException::~WindowInitializationFailureException() {
 		if (this->WindowClassName) {
-			delete[] this->WindowClassName;
+			free(this->WindowClassName);
 			this->WindowClassName = nullptr;
 		}
 	}
