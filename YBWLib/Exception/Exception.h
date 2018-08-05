@@ -153,6 +153,7 @@ namespace Exception {
 	template <typename _Ty>
 	FORCEINLINE const char* get_type_name() { return typeid(_Ty).name(); }
 	YBWLIB_API wchar_t* format_string(const wchar_t* format, ...);
+	YBWLIB_API wchar_t* u8string_to_u16string(const char* u8str);
 	YBWLIB_API wchar_t* pointer_to_string(const void* ptr);
 	YBWLIB_API wchar_t* size_to_string(size_t size);
 }
