@@ -1,5 +1,6 @@
 #pragma once
 #include <minwindef.h>
+#include <Ole2.h>
 #include "..\YBWLib.h"
 
 class YBWLIB_API unique_handle {

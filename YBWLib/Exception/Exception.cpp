@@ -328,9 +328,9 @@ namespace Exception {
 	}
 
 	wchar_t* u8string_to_u16string(const char* u8str) {
-		size_t cb_u16str = MultiByteToWideChar(CP_UTF8, 0, u8str, -1, nullptr, 0);
-		wchar_t* u16str = new wchar_t[cb_u16str + 1];
-		if (!MultiByteToWideChar(CP_UTF8, 0, u8str, -1, u16str, cb_u16str + 1)) THROW_EXTERNAL_API_ERROR_EXCEPTION_LIB("kernel32", "MultiByteToWideChar");
+		size_t cch_u16str = MultiByteToWideChar(CP_UTF8, 0, u8str, -1, nullptr, 0);
+		wchar_t* u16str = new wchar_t[cch_u16str + 1];
+		if (!MultiByteToWideChar(CP_UTF8, 0, u8str, -1, u16str, cch_u16str + 1)) THROW_EXTERNAL_API_ERROR_EXCEPTION_LIB("kernel32", "MultiByteToWideChar");
 		return u16str;
 	}
 
