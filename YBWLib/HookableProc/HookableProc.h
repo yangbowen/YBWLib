@@ -23,7 +23,7 @@ namespace HookableProc {
 			void SetEntryValue(_In_ const GUID* guid, _In_opt_ uintptr_t value);
 			void DeleteEntry(_In_ const GUID* guid);
 		protected:
-			_impl_InvocationPacketAdditionalDataHelper* pimpl = nullptr;
+			_impl_InvocationPacketAdditionalDataHelper * pimpl = nullptr;
 		};
 		class _impl_InvocationPacketAdditionalDataHelper;
 	}
@@ -106,7 +106,7 @@ namespace HookableProc {
 			inline void DeleteAdditionalDataEntry(_In_ const GUID* guid) { return this->add_data_helper.DeleteEntry(guid); }
 			FORCEINLINE void DeleteAdditionalDataEntry(_In_ const GUID& guid) { return this->DeleteAdditionalDataEntry(&guid); }
 		protected:
-			ParamType* param = nullptr;
+			ParamType * param = nullptr;
 			ReturnType* ret = nullptr;
 			Internal::InvocationPacketAdditionalDataHelper add_data_helper;
 		};
@@ -120,6 +120,7 @@ namespace HookableProc {
 			using ClassType = _Classty;
 			typedef HookRet(__thiscall ClassType:: * HookFnptrType)(_In_ InvocationPacket* packet, _Inout_opt_ void* context, _Inout_ HookableFunction* func, _Inout_ HookEntry* hook_entry);
 			typedef void(__thiscall ClassType:: * HookCleanupFnptrType)(_Inout_opt_ void* context, _In_ const GUID* guid_hook);
+			typedef HookRet(__thiscall ClassType::*LiteHookFnptrType)(_In_ InvocationPacket* packet);
 			/// <summary>Create a hook entry.</summary>
 			/// <param name="guid">
 			/// The GUID of this hook entry.
@@ -169,6 +170,45 @@ namespace HookableProc {
 					}, reinterpret_cast<void*>(ctx));
 				ctx->hook_entry = new HookEntry(*this);
 			}
+			/// <summary>Create a hook entry.</summary>
+			/// <param name="guid">
+			/// The GUID of this hook entry.
+			/// No other hook entries in the same hookable function may have an identical GUID.
+			/// </param>
+			/// <param name="lite_hook_fnptr">A pointer to the member function that is called when the hook is invoked.</param>
+			/// <param name="obj">
+			/// A pointer to the object that's used as the <c>this</c> pointer when calling <paramref name="hook_fnptr" /> and <paramref name="cleanup_fnptr" />.
+			/// The hook entry itself will not delete the object pointed to by it.
+			/// However, the member function pointed by <paramref name="cleanup_fnptr" /> may delete it using <c>delete this</c>.
+			/// </param>
+			HookEntry(_In_ const GUID* guid, _In_opt_ LiteHookFnptrType lite_hook_fnptr, _In_ ClassType* obj) {
+				if (!guid) THROW_INVALID_PARAMETER_EXCEPTION_THIS(0);
+				if (!obj) THROW_INVALID_PARAMETER_EXCEPTION_THIS(2);
+				ctx_t* ctx = new ctx_t();
+				ctx->lite_hook_fnptr = lite_hook_fnptr;
+				ctx->obj = obj;
+				this->raw_entry = new Raw::RawHookEntry(guid,
+					[](_In_opt_ void* rawparam, _Inout_opt_ void* rawcontext, _Inout_ Raw::RawProcedure* rawproc, _Inout_ Raw::RawHookEntry* raw_hook_entry)->HookRet {
+						UNREFERENCED_PARAMETER(raw_hook_entry);
+						InvocationPacket* packet = reinterpret_cast<InvocationPacket*>(rawparam);
+						if (!packet) THROW_UNEXPECTED_ERROR_EXCEPTION();
+						ctx_t* ctx = reinterpret_cast<ctx_t*>(rawcontext);
+						if (!ctx || !ctx->obj || !ctx->hook_entry) THROW_UNEXPECTED_ERROR_EXCEPTION();
+						HookableFunction* func = reinterpret_cast<HookableFunction*>(rawproc->GetProcedureContext());
+						if (!func || !func->constructed) THROW_UNEXPECTED_ERROR_EXCEPTION();
+						if (ctx->lite_hook_fnptr)
+							return (ctx->obj->*(ctx->lite_hook_fnptr))(packet);
+						else
+							return HookRet_Continue;
+					},
+					[](_Inout_opt_ void* context, _In_ const GUID* guid_hook) {
+						ctx_t* ctx = reinterpret_cast<ctx_t*>(context);
+						if (!ctx || !ctx->obj) THROW_UNEXPECTED_ERROR_EXCEPTION();
+						delete ctx;
+						ctx = nullptr;
+					}, reinterpret_cast<void*>(ctx));
+				ctx->hook_entry = new HookEntry(*this);
+			}
 			HookEntry(const HookEntry& t)
 				: raw_entry(t.raw_entry ? new Raw::RawHookEntry(*t.raw_entry) : nullptr) {}
 			HookEntry(HookEntry&& t)
@@ -197,7 +237,10 @@ namespace HookableProc {
 			const Raw::RawHookEntry* GetRawEntry() const { return this->raw_entry; }
 		protected:
 			struct ctx_t final {
-				HookFnptrType hook_fnptr = nullptr;
+				union {
+					HookFnptrType hook_fnptr = nullptr;
+					LiteHookFnptrType lite_hook_fnptr;
+				};
 				HookCleanupFnptrType cleanup_fnptr = nullptr;
 				ClassType* obj = nullptr;
 				void* context = nullptr;
@@ -216,6 +259,7 @@ namespace HookableProc {
 			using ReturnType = ReturnType;
 			typedef HookRet(__stdcall * HookFnptrType)(_In_ InvocationPacket* packet, _Inout_opt_ void* context, _Inout_ HookableFunction* func, _Inout_ HookEntry* hook_entry);
 			typedef void(__stdcall * HookCleanupFnptrType)(_Inout_opt_ void* context, _In_ const GUID* guid_hook);
+			typedef HookRet(__stdcall *LiteHookFnptrType)(_In_ InvocationPacket* packet);
 			/// <summary>Create a hook entry.</summary>
 			/// <param name="guid">
 			/// The GUID of this hook entry.
@@ -258,6 +302,39 @@ namespace HookableProc {
 					}, reinterpret_cast<void*>(ctx));
 				ctx->hook_entry = new HookEntry(*this);
 			}
+			/// <summary>Create a hook entry.</summary>
+			/// <param name="guid">
+			/// The GUID of this hook entry.
+			/// No other hook entries in the same hookable function may have an identical GUID.
+			/// </param>
+			/// <param name="lite_hook_fnptr">A pointer to the function that is called when the hook is invoked.</param>
+			HookEntry(_In_ const GUID* guid, _In_opt_ LiteHookFnptrType lite_hook_fnptr) {
+				if (!guid) THROW_INVALID_PARAMETER_EXCEPTION_THIS(0);
+				ctx_t* ctx = new ctx_t();
+				ctx->lite_hook_fnptr = lite_hook_fnptr;
+				this->raw_entry = new Raw::RawHookEntry(guid,
+					[](_In_opt_ void* rawparam, _Inout_opt_ void* rawcontext, _Inout_ Raw::RawProcedure* rawproc, _Inout_ Raw::RawHookEntry* raw_hook_entry)->HookRet {
+						UNREFERENCED_PARAMETER(raw_hook_entry);
+						InvocationPacket* packet = reinterpret_cast<InvocationPacket*>(rawparam);
+						if (!packet) THROW_UNEXPECTED_ERROR_EXCEPTION();
+						ctx_t* ctx = reinterpret_cast<ctx_t*>(rawcontext);
+						if (!ctx || !ctx->hook_entry) THROW_UNEXPECTED_ERROR_EXCEPTION();
+						HookableFunction* func = reinterpret_cast<HookableFunction*>(rawproc->GetProcedureContext());
+						if (!func || !func->constructed) THROW_UNEXPECTED_ERROR_EXCEPTION();
+						if (ctx->lite_hook_fnptr)
+							return (*ctx->lite_hook_fnptr)(packet);
+						else
+							return HookRet_Continue;
+					},
+					[](_Inout_opt_ void* context, _In_ const GUID* guid_hook) {
+						UNREFERENCED_PARAMETER(guid_hook);
+						ctx_t* ctx = reinterpret_cast<ctx_t*>(context);
+						if (!ctx) THROW_UNEXPECTED_ERROR_EXCEPTION();
+						delete ctx;
+						ctx = nullptr;
+					}, reinterpret_cast<void*>(ctx));
+				ctx->hook_entry = new HookEntry(*this);
+			}
 			HookEntry(const HookEntry& t)
 				: raw_entry(t.raw_entry ? new Raw::RawHookEntry(*t.raw_entry) : nullptr) {}
 			HookEntry(HookEntry&& t)
@@ -286,7 +363,10 @@ namespace HookableProc {
 			const Raw::RawHookEntry* GetRawEntry() const { return this->raw_entry; }
 		protected:
 			struct ctx_t final {
-				HookFnptrType hook_fnptr = nullptr;
+				union {
+					HookFnptrType hook_fnptr = nullptr;
+					LiteHookFnptrType lite_hook_fnptr;
+				};
 				HookCleanupFnptrType cleanup_fnptr = nullptr;
 				void* context = nullptr;
 				HookEntry* hook_entry = nullptr;
@@ -532,7 +612,7 @@ namespace HookableProc {
 			inline void DeleteAdditionalDataEntry(_In_ const GUID* guid) { return this->add_data_helper.DeleteEntry(guid); }
 			FORCEINLINE void DeleteAdditionalDataEntry(_In_ const GUID& guid) { return this->DeleteAdditionalDataEntry(&guid); }
 		protected:
-			ParamType* param = nullptr;
+			ParamType * param = nullptr;
 			Internal::InvocationPacketAdditionalDataHelper add_data_helper;
 		};
 		/// <summary>A hook entry of which the hook function and the cleanup function are non-static member functions of a class.</summary>
@@ -544,6 +624,7 @@ namespace HookableProc {
 			using ClassType = _Classty;
 			typedef HookRet(__thiscall ClassType:: * HookFnptrType)(_In_ InvocationPacket* packet, _Inout_opt_ void* context, _Inout_ PureHookableProcedure* procedure, _Inout_ HookEntry* hook_entry);
 			typedef void(__thiscall ClassType:: * HookCleanupFnptrType)(_Inout_opt_ void* context, _In_ const GUID* guid_hook);
+			typedef HookRet(__thiscall ClassType::*LiteHookFnptrType)(_In_ InvocationPacket* packet);
 			/// <summary>Create a hook entry.</summary>
 			/// <param name="guid">
 			/// The GUID of this hook entry.
@@ -593,6 +674,45 @@ namespace HookableProc {
 					}, reinterpret_cast<void*>(ctx));
 				ctx->hook_entry = new HookEntry(*this);
 			}
+			/// <summary>Create a hook entry.</summary>
+			/// <param name="guid">
+			/// The GUID of this hook entry.
+			/// No other hook entries in the same hookable function may have an identical GUID.
+			/// </param>
+			/// <param name="lite_hook_fnptr">A pointer to the member function that is called when the hook is invoked.</param>
+			/// <param name="obj">
+			/// A pointer to the object that's used as the <c>this</c> pointer when calling <paramref name="hook_fnptr" /> and <paramref name="cleanup_fnptr" />.
+			/// The hook entry itself will not delete the object pointed to by it.
+			/// However, the member function pointed by <paramref name="cleanup_fnptr" /> may delete it using <c>delete this</c>.
+			/// </param>
+			HookEntry(_In_ const GUID* guid, _In_opt_ LiteHookFnptrType lite_hook_fnptr, _In_ ClassType* obj) {
+				if (!guid) THROW_INVALID_PARAMETER_EXCEPTION_THIS(0);
+				if (!obj) THROW_INVALID_PARAMETER_EXCEPTION_THIS(2);
+				ctx_t* ctx = new ctx_t();
+				ctx->lite_hook_fnptr = lite_hook_fnptr;
+				ctx->obj = obj;
+				this->raw_entry = new Raw::RawHookEntry(guid,
+					[](_In_opt_ void* rawparam, _Inout_opt_ void* rawcontext, _Inout_ Raw::RawProcedure* rawproc, _Inout_ Raw::RawHookEntry* raw_hook_entry)->HookRet {
+						UNREFERENCED_PARAMETER(raw_hook_entry);
+						InvocationPacket* packet = reinterpret_cast<InvocationPacket*>(rawparam);
+						if (!packet) THROW_UNEXPECTED_ERROR_EXCEPTION();
+						ctx_t* ctx = reinterpret_cast<ctx_t*>(rawcontext);
+						if (!ctx || !ctx->obj || !ctx->hook_entry) THROW_UNEXPECTED_ERROR_EXCEPTION();
+						PureHookableProcedure* procedure = reinterpret_cast<PureHookableProcedure*>(rawproc->GetProcedureContext());
+						if (!procedure || !procedure->constructed) THROW_UNEXPECTED_ERROR_EXCEPTION();
+						if (ctx->lite_hook_fnptr)
+							return (ctx->obj->*(ctx->lite_hook_fnptr))(packet);
+						else
+							return HookRet_Continue;
+					},
+					[](_Inout_opt_ void* context, _In_ const GUID* guid_hook) {
+						ctx_t* ctx = reinterpret_cast<ctx_t*>(context);
+						if (!ctx || !ctx->obj) THROW_UNEXPECTED_ERROR_EXCEPTION();
+						delete ctx;
+						ctx = nullptr;
+					}, reinterpret_cast<void*>(ctx));
+				ctx->hook_entry = new HookEntry(*this);
+			}
 			HookEntry(const HookEntry& t)
 				: raw_entry(t.raw_entry ? new Raw::RawHookEntry(*t.raw_entry) : nullptr) {}
 			HookEntry(HookEntry&& t)
@@ -621,7 +741,10 @@ namespace HookableProc {
 			const Raw::RawHookEntry* GetRawEntry() const { return this->raw_entry; }
 		protected:
 			struct ctx_t final {
-				HookFnptrType hook_fnptr = nullptr;
+				union {
+					HookFnptrType hook_fnptr = nullptr;
+					LiteHookFnptrType lite_hook_fnptr;
+				};
 				HookCleanupFnptrType cleanup_fnptr = nullptr;
 				ClassType* obj = nullptr;
 				void* context = nullptr;
@@ -639,6 +762,7 @@ namespace HookableProc {
 			using ParamType = ParamType;
 			typedef HookRet(__stdcall * HookFnptrType)(_In_ InvocationPacket* packet, _Inout_opt_ void* context, _Inout_ PureHookableProcedure* procedure, _Inout_ HookEntry* hook_entry);
 			typedef void(__stdcall * HookCleanupFnptrType)(_Inout_opt_ void* context, _In_ const GUID* guid_hook);
+			typedef HookRet(__stdcall *LiteHookFnptrType)(_In_ InvocationPacket* packet);
 			/// <summary>Create a hook entry.</summary>
 			/// <param name="guid">
 			/// The GUID of this hook entry.
@@ -681,6 +805,39 @@ namespace HookableProc {
 					}, reinterpret_cast<void*>(ctx));
 				ctx->hook_entry = new HookEntry(*this);
 			}
+			/// <summary>Create a hook entry.</summary>
+			/// <param name="guid">
+			/// The GUID of this hook entry.
+			/// No other hook entries in the same hookable function may have an identical GUID.
+			/// </param>
+			/// <param name="lite_hook_fnptr">A pointer to the function that is called when the hook is invoked.</param>
+			HookEntry(_In_ const GUID* guid, _In_opt_ LiteHookFnptrType lite_hook_fnptr) {
+				if (!guid) THROW_INVALID_PARAMETER_EXCEPTION_THIS(0);
+				ctx_t* ctx = new ctx_t();
+				ctx->lite_hook_fnptr = lite_hook_fnptr;
+				this->raw_entry = new Raw::RawHookEntry(guid,
+					[](_In_opt_ void* rawparam, _Inout_opt_ void* rawcontext, _Inout_ Raw::RawProcedure* rawproc, _Inout_ Raw::RawHookEntry* raw_hook_entry)->HookRet {
+						UNREFERENCED_PARAMETER(raw_hook_entry);
+						InvocationPacket* packet = reinterpret_cast<InvocationPacket*>(rawparam);
+						if (!packet) THROW_UNEXPECTED_ERROR_EXCEPTION();
+						ctx_t* ctx = reinterpret_cast<ctx_t*>(rawcontext);
+						if (!ctx || !ctx->hook_entry) THROW_UNEXPECTED_ERROR_EXCEPTION();
+						PureHookableProcedure* procedure = reinterpret_cast<PureHookableProcedure*>(rawproc->GetProcedureContext());
+						if (!procedure || !procedure->constructed) THROW_UNEXPECTED_ERROR_EXCEPTION();
+						if (ctx->lite_hook_fnptr)
+							return (*ctx->lite_hook_fnptr)(packet);
+						else
+							return HookRet_Continue;
+					},
+					[](_Inout_opt_ void* context, _In_ const GUID* guid_hook) {
+						UNREFERENCED_PARAMETER(guid_hook);
+						ctx_t* ctx = reinterpret_cast<ctx_t*>(context);
+						if (!ctx) THROW_UNEXPECTED_ERROR_EXCEPTION();
+						delete ctx;
+						ctx = nullptr;
+					}, reinterpret_cast<void*>(ctx));
+				ctx->hook_entry = new HookEntry(*this);
+			}
 			HookEntry(const HookEntry& t)
 				: raw_entry(t.raw_entry ? new Raw::RawHookEntry(*t.raw_entry) : nullptr) {}
 			HookEntry(HookEntry&& t)
@@ -709,7 +866,10 @@ namespace HookableProc {
 			const Raw::RawHookEntry* GetRawEntry() const { return this->raw_entry; }
 		protected:
 			struct ctx_t final {
-				HookFnptrType hook_fnptr = nullptr;
+				union {
+					HookFnptrType hook_fnptr = nullptr;
+					LiteHookFnptrType lite_hook_fnptr;
+				};
 				HookCleanupFnptrType cleanup_fnptr = nullptr;
 				void* context = nullptr;
 				HookEntry* hook_entry = nullptr;
@@ -751,7 +911,7 @@ namespace HookableProc {
 			if (!guid_procedure) THROW_INVALID_PARAMETER_EXCEPTION_CLASS(PureHookableProcedure, 0);
 			Raw::RawProcedure* rawproc = Raw::RawProcedure::GetProcedure(guid_procedure);
 			PureHookableProcedure* procedure = reinterpret_cast<PureHookableProcedure*>(rawproc->GetProcedureContext());
-			if (!procedure || !procedure->constructed) THROW_INVALID_PARAMETER_EXCEPTION_THIS(0);
+			if (!procedure || !procedure->constructed) THROW_INVALID_PARAMETER_EXCEPTION_CLASS(PureHookableProcedure, 0);
 			return procedure;
 		}
 		/// <summary>Create a hook.</summary>
