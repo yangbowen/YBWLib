@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _INCLUDED_YBWLIB_PTR_HELPER_H_
+#define _INCLUDED_YBWLIB_PTR_HELPER_H_
 #include <minwindef.h>
 #include <Ole2.h>
 #include "..\YBWLib.h"
@@ -213,3 +215,4 @@ protected:
 };
 
 void SysFreeString(const olestr&) = delete;
+#endif

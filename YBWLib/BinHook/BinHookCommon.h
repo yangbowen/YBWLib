@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _INCLUDED_YBWLIB_BINHOOKCOMMON_H_
+#define _INCLUDED_YBWLIB_BINHOOKCOMMON_H_
 #include <minwindef.h>
 #include "..\YBWLib.h"
 
@@ -23,3 +25,4 @@ namespace BinHook {
 		_impl_SuspendOtherThreads* pimpl = nullptr;
 	};
 }
+#endif

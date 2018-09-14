@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _INCLUDED_YBWLIB_BINHOOKSTDCALL_H_
+#define _INCLUDED_YBWLIB_BINHOOKSTDCALL_H_
 #include <cstdint>
 #include <sal.h>
 #include <guiddef.h>
@@ -196,3 +198,4 @@ namespace BinHook {
 	};
 #endif
 }
+#endif

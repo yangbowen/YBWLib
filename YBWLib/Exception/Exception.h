@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _INCLUDED_YBWLIB_EXCEPTION_H_
+#define _INCLUDED_YBWLIB_EXCEPTION_H_
 
 #include <minwindef.h>
 #include <typeinfo>
@@ -157,3 +159,4 @@ namespace Exception {
 	YBWLIB_API wchar_t* pointer_to_string(const void* ptr);
 	YBWLIB_API wchar_t* size_to_string(size_t size);
 }
+#endif

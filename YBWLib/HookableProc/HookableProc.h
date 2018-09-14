@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _INCLUDED_YBWLIB_HOOKABLEPROC_H_
+#define _INCLUDED_YBWLIB_HOOKABLEPROC_H_
 #include <new>
 #include <sal.h>
 #include <guiddef.h>
@@ -1054,3 +1056,4 @@ namespace HookableProc {
 		}
 	};
 }
+#endif

@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _INCLUDED_YBWLIB_BINHOOKRAW_H_
+#define _INCLUDED_YBWLIB_BINHOOKRAW_H_
 #include <minwindef.h>
 #include "..\YBWLib.h"
 #include "..\exception\Exception.h"
@@ -78,3 +80,4 @@ namespace BinHook::Raw {
 		return hook_code;
 	}
 }
+#endif

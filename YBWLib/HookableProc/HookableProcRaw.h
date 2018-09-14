@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _INCLUDED_YBWLIB_HOOKABLEPROCRAW_H_
+#define _INCLUDED_YBWLIB_HOOKABLEPROCRAW_H_
 #include <sal.h>
 #include <guiddef.h>
 #include "..\YBWLib.h"
@@ -132,3 +134,4 @@ namespace HookableProc::Raw {
 		const GUID** GetPGuidHookInvoking();
 	};
 }
+#endif

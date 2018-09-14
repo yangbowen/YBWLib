@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _INCLUDED_YBWLIB_EXCEPTION_HELPER_H_
+#define _INCLUDED_YBWLIB_EXCEPTION_HELPER_H_
 #include <minwindef.h>
 #include <exception>
 #include "..\YBWLib.h"
@@ -10,3 +12,4 @@ namespace Exception {
 	void YBWLIB_API display_exception(_In_ const std::exception* err);
 	void YBWLIB_API display_exception();
 }
+#endif

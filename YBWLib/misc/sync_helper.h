@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _INCLUDED_YBWLIB_SYNC_HELPER_H_
+#define _INCLUDED_YBWLIB_SYNC_HELPER_H_
 #include "..\YBWLib.h"
 
 class mutex;
@@ -63,3 +65,4 @@ public:
 protected:
 	_impl_lock_guard_recursive_mutex* pimpl;
 };
+#endif

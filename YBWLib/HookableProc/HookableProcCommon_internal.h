@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _INCLUDED_YBWLIB_HOOKABLEPROC_INTERNAL_H_
+#define _INCLUDED_YBWLIB_HOOKABLEPROC_INTERNAL_H_
 #include <memory>
 #include <sal.h>
 #include <guiddef.h>
@@ -43,3 +45,4 @@ namespace HookableProc {
 		~_impl_HookPosition() {}
 	};
 }
+#endif

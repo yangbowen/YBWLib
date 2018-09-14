@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _INCLUDED_YBWLIB_PIMPL_HELPER_H_
+#define _INCLUDED_YBWLIB_PIMPL_HELPER_H_
 
 #define IMPL_CLASSNAME(classname) _impl_##classname
 #define IMPL_CLASSNAME_NAMESPACE(classname, namespacename) namespacename::_impl_##classname
@@ -66,3 +68,4 @@ namespacename::classname::classname() {\
 	this->pimpl = new IMPL_CLASSNAME_NAMESPACE(classname, namespacename)();\
 	this->pimpl->pdecl = this;\
 }
+#endif

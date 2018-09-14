@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _INCLUDED_YBWLIB_BINHOOKFASTCALL_H_
+#define _INCLUDED_YBWLIB_BINHOOKFASTCALL_H_
 #include <cstdint>
 #include <sal.h>
 #include <guiddef.h>
@@ -202,3 +204,4 @@ namespace BinHook {
 	};
 #endif
 }
+#endif

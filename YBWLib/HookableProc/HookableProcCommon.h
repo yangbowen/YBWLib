@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _INCLUDED_YBWLIB_HOOKABLEPROCCOMMON_H_
+#define _INCLUDED_YBWLIB_HOOKABLEPROCCOMMON_H_
 #include <sal.h>
 #include <guiddef.h>
 #include "..\YBWLib.h"
@@ -55,3 +57,4 @@ namespace HookableProc {
 		_impl_HookPosition* pimpl = nullptr;
 	};
 }
+#endif

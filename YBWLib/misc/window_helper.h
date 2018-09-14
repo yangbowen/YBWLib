@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _INCLUDED_YBWLIB_WINDOW_HELPER_H_
+#define _INCLUDED_YBWLIB_WINDOW_HELPER_H_
 #include <windef.h>
 #include "..\YBWLib.h"
 
@@ -30,3 +32,4 @@ YBWLIB_API void window_register(_In_ HWND hwnd);
 YBWLIB_API void window_unregister(_In_ HWND hwnd);
 // Broadcast a window message to all windows in the window list.
 YBWLIB_API void window_broadcast(_In_ UINT msg, _In_ WPARAM wparam, _In_ LPARAM lparam);
+#endif

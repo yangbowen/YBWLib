@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _INCLUDED_YBWLIB_HOOKABLEPROC_EXCEPTION_H_
+#define _INCLUDED_YBWLIB_HOOKABLEPROC_EXCEPTION_H_
 
 #include <cstdint>
 #include <guiddef.h>
@@ -114,3 +116,4 @@ namespace HookableProc {
 		virtual wchar_t* GetDescription() const;
 	};
 }
+#endif

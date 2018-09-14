@@ -1,4 +1,6 @@
 #pragma once
+#ifndef _INCLUDED_YBWLIB_GUID_HELPER_H_
+#define _INCLUDED_YBWLIB_GUID_HELPER_H_
 #include <minwindef.h>
 #include <guiddef.h>
 
@@ -26,3 +28,4 @@ struct less_than_guid {
 constexpr hash_guid obj_hash_guid {};
 constexpr equal_to_guid obj_equal_to_guid {};
 constexpr less_than_guid obj_less_than_guid {};
+#endif
