@@ -109,5 +109,65 @@ namespace BinHook {
 			return HookableProc::HookRet_Continue;
 		}
 	};
+
+	/// <summary>An object for binary hooking some code and calling a hookable procedure when the code is executed.</summary>
+	/// <typeparam name="_Paramty">The type of the parameter of the procedure.</typeparam>
+	template <typename _Paramty>
+	class HookableProcedureBinHook abstract {
+	public:
+		using ParamType = _Paramty;
+		typedef HookableProc::PureHookableProcedure<_Paramty> HookableProcedureType;
+		/// <summary>Create a hookable procedure binary hook.</summary>
+		/// <param name="guid_procedure">
+		/// The GUID of the hookable procedure to be created.
+		/// No other hookable functions or hookable procedures may have an identical GUID.
+		/// </param>
+		/// <param name="context_proc">An optional context value associated with the procedure.</param>
+		explicit HookableProcedureBinHook(_In_ const GUID* guid_procedure, _Inout_opt_ void* context_proc) {
+			if (!guid_procedure) THROW_INVALID_PARAMETER_EXCEPTION_THIS(0);
+			this->hookable_proc = HookableProcedureType::CreateProcedure(guid_procedure, context_proc);
+			MemoryBarrier();
+			this->constructed = true;
+		}
+		/// <summary>Apply the binary hook.</summary>
+		/// <param name="hook_target">
+		/// The executable location at which to apply the binary hook.
+		/// The caller must ensure that no code that jumps to or calls some location just after <paramref name="hook_target" />. (Jumps or calls exactly to <paramref name="hook_target" /> are fine)
+		/// </param>
+		/// <param name="suspend_other_threads">
+		/// An optional pointer to a <c>SuspendOtherThreads</c> object that suspends other threads in order to avoid data races.
+		/// If this pointer is not empty, this function will not call <c>ResumeThreads</c> or delete the object. It's the caller's responsiblity to resume the threads.
+		/// If this pointer is empty, this function creates a <c>SuspendOtherThreads</c> object internally and will delete the object when it's done.
+		/// Note that if there're multiple binary hooks to apply, it's recommended to create a common <c>SuspendOtherThreads</c> object and use it.
+		/// </param>
+		virtual void ApplyBinHook(_Inout_ void* hook_target, _Inout_opt_ SuspendOtherThreads* suspend_other_threads) {
+			if (this->has_applied) THROW_UNEXPECTED_ERROR_EXCEPTION();
+			MemoryBarrier();
+			this->ApplyRawBinHook(hook_target, suspend_other_threads);
+			MemoryBarrier();
+			this->has_applied = true;
+		}
+		virtual ~HookableProcedureBinHook() {}
+	protected:
+		bool constructed = false;
+		bool has_applied = false;
+		/// <summary>
+		/// A pointer to the hookable procedure.
+		/// This object does not own the object pointed to by this member variable.
+		/// </summary>
+		HookableProcedureType* hookable_proc = nullptr;
+		/// <summary>Apply the raw binary hook.</summary>
+		/// <param name="hook_target">
+		/// The executable location at which to apply the binary hook.
+		/// The caller must ensure that no code that jumps to or calls some location just after <paramref name="hook_target" />. (Jumps or calls exactly to <paramref name="hook_target" /> are fine)
+		/// </param>
+		/// <param name="suspend_other_threads">
+		/// An optional pointer to a <c>SuspendOtherThreads</c> object that suspends other threads in order to avoid data races.
+		/// If this pointer is not empty, this function will not call <c>ResumeThreads</c> or delete the object. It's the caller's responsiblity to resume the threads.
+		/// If this pointer is empty, this function creates a <c>SuspendOtherThreads</c> object internally and will delete the object when it's done.
+		/// Note that if there're multiple binary hooks to apply, it's recommended to create a common <c>SuspendOtherThreads</c> object and use it.
+		/// </param>
+		virtual void ApplyRawBinHook(_Inout_ void* hook_target, _Inout_opt_ SuspendOtherThreads* suspend_other_threads) = 0;
+	};
 }
 #endif

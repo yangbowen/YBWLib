@@ -129,6 +129,9 @@
     <ClInclude Include="BinHook\BinHookMsFastcall.h">
       <Filter>Header Files\BinHook</Filter>
     </ClInclude>
+    <ClInclude Include="BinHook\BinHookNoCall.h">
+      <Filter>Header Files\BinHook</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -198,6 +201,9 @@
       <Filter>Source Files\BinHook</Filter>
     </ClCompile>
     <ClCompile Include="BinHook\BinHookMsFastcall.cpp">
+      <Filter>Source Files\BinHook</Filter>
+    </ClCompile>
+    <ClCompile Include="BinHook\BinHookNoCall.cpp">
       <Filter>Source Files\BinHook</Filter>
     </ClCompile>
   </ItemGroup>
