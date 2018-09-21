@@ -110,7 +110,7 @@ namespace BinHook {
 				if (!raw_param) THROW_INVALID_PARAMETER_EXCEPTION_CLASS(NoCallHookableProcedureBinHook, 1);
 				ParamType param(*raw_param);
 				hookable_proc->Invoke(&param);
-				raw_param.~NoCallRawParam();
+				raw_param->~NoCallRawParam();
 				new(raw_param) NoCallRawParam(param);
 			} catch (Exception::BaseException& err) {
 				display_exception(&err);
