@@ -489,7 +489,10 @@ namespace HookableProc {
 			return this->rawproc->DeleteHook(guid_hook);
 		}
 		/// <summary>Invoke all inserted hooks associated with this function.</summary>
-		/// <param name="param">An optional parameter to be passed to the hooks.</param>
+		/// <param name="param">
+		/// An optional parameter to be passed to the hooks.
+		/// The hookable function doesn't acquire ownership of the pointer.
+		/// </param>
 		/// <returns>
 		/// The final return value set by an invoked hook.
 		/// The caller should delete the returned object when it's no longer useful.
@@ -593,12 +596,7 @@ namespace HookableProc {
 				: param(param) {}
 			InvocationPacket(const InvocationPacket&) = delete;
 			InvocationPacket(InvocationPacket&&) = delete;
-			~InvocationPacket() {
-				if (this->param) {
-					delete this->param;
-					this->param = nullptr;
-				}
-			}
+			~InvocationPacket() {}
 			/// <summary>Get the parameter passed from the invoker.</summary>
 			/// <returns>
 			/// A pointer to the parameter.
@@ -984,7 +982,10 @@ namespace HookableProc {
 			return this->rawproc->DeleteHook(guid_hook);
 		}
 		/// <summary>Invoke all inserted hooks associated with this procedure.</summary>
-		/// <param name="param">An optional parameter to be passed to the hooks.</param>
+		/// <param name="param">
+		/// An optional parameter to be passed to the hooks.
+		/// The hookable procedure doesn't acquire ownership of the pointer.
+		/// </param>
 		void __thiscall Invoke(_Inout_opt_ ParamType* param) {
 			InvocationPacket packet(param);
 			this->rawproc->Invoke(reinterpret_cast<void*>(&packet));
