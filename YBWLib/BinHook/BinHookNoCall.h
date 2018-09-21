@@ -64,7 +64,7 @@ namespace BinHook {
 	namespace Internal {
 		struct NoCallHookableProcedureBinHook_ctx_t {
 			void* pobj_hookable_proc = nullptr;
-			void(__stdcall* p_invoke_procedure)(_Inout_ void* pobj_hookable_proc, _In_ const NoCallRawParam* raw_param);
+			void(__stdcall* p_invoke_procedure)(_Inout_ void* pobj_hookable_proc, _In_ NoCallRawParam* raw_param);
 		};
 		YBWLIB_API void NoCallHookableProcedureBinHook_init();
 		YBWLIB_API size_t NoCallHookableProcedureBinHook_get_len_hook_code();
