@@ -7,6 +7,11 @@
 
 class YBWLIB_API unique_handle {
 public:
+	struct hash_t {
+		FORCEINLINE size_t operator()(const unique_handle& t) const {
+			return t.hash();
+		}
+	};
 	unique_handle() {}
 	unique_handle(nullptr_t) {}
 	unique_handle(HANDLE t) {
@@ -34,6 +39,7 @@ public:
 		x.handle = this->handle;
 		this->handle = t;
 	}
+	size_t hash() const;
 	operator bool() const {
 		return this->get();
 	}
@@ -83,6 +89,11 @@ BOOL CloseHandle(const unique_handle&) = delete;
 
 class YBWLIB_API unique_hdc {
 public:
+	struct hash_t {
+		FORCEINLINE size_t operator()(const unique_handle& t) const {
+			return t.hash();
+		}
+	};
 	unique_hdc() {}
 	unique_hdc(nullptr_t) {}
 	unique_hdc(HDC t) {
@@ -110,6 +121,7 @@ public:
 		x.hdc = this->hdc;
 		this->hdc = t;
 	}
+	size_t hash() const;
 	operator bool() const {
 		return this->get();
 	}
@@ -159,6 +171,11 @@ BOOL DeleteDC(const unique_hdc&) = delete;
 
 class YBWLIB_API olestr {
 public:
+	struct hash_t {
+		FORCEINLINE size_t operator()(const unique_handle& t) const {
+			return t.hash();
+		}
+	};
 	olestr() {}
 	olestr(nullptr_t) {}
 	// Do NOT pass a normal wide-char string to this constructor.
@@ -189,6 +206,7 @@ public:
 		x.bstr = this->bstr;
 		this->bstr = t;
 	}
+	size_t hash() const;
 	operator bool() const {
 		return this->get();
 	}
